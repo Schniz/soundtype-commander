@@ -13,7 +13,9 @@
     "test": "tsdx test",
     "prepublishOnly": "tsdx build && tsdx test"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "commander": "^2.20.0"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
