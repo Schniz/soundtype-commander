@@ -10,7 +10,8 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test"
+    "test": "tsdx test",
+    "prepublishOnly": "tsdx build && tsdx test"
   },
   "peerDependencies": {},
   "husky": {
