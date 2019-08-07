@@ -1,10 +1,12 @@
-# Commander.ts
+# `@soundtype/commander`
 
 A type-safe wrapper around [commander.js](https://github.com/tj/commander.js) with excellent type inference.
 
 ## Usage
 
 ```ts
+import { program } from '@soundtype/commander';
+
 const myProgram = program('my-app', '1.0.0')
   .option({
     name: 'bool',

@@ -1,8 +1,8 @@
 {
-  "name": "commander.ts",
+  "name": "@soundtype/commander",
   "version": "0.1.0",
   "main": "dist/index.js",
-  "module": "dist/commander.ts.esm.js",
+  "module": "dist/commander.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
