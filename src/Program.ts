@@ -9,6 +9,7 @@ export class Program<ArgumentTypes extends { [key: string]: any }> {
     this.command = command;
   }
 
+  /** Execute commander */
   parse(argv: string[]): ArgumentTypes {
     return this.parseFn(this.command.parse(argv));
   }

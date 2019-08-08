@@ -1,6 +1,9 @@
 import { Command } from 'commander';
 import { Program } from './Program';
 
+/**
+ * A more readable and declarative form of `Cond extends true ? True : False`
+ */
 type If<
   Condition extends { Cond: boolean; True: any; False: any }
 > = Condition['Cond'] extends true ? Condition['True'] : Condition['False'];
@@ -17,6 +20,9 @@ type OptionsFor<X> = {
   };
 };
 
+/**
+ * Build type-safe `commander` programs
+ */
 export class ProgramBuilder<
   ArgumentTypes extends { [key: string]: any } = {},
   HasVariadic extends boolean = false
@@ -53,16 +59,31 @@ export class ProgramBuilder<
     return new ProgramBuilder<{}>([], {}, name, version, undefined);
   }
 
+  /**
+   * Add a new option to the command (`--myOption`)
+   *
+   * @param opts option definition
+   */
   option<ArgumentName extends string, ArgumentType>(
     opts: {
+      /** The name of the command (`--${name}`). Please only use camelCase! */
       name: ArgumentName;
+      /** A shorthand form of the command */
       shorthand?: string;
+      /** A default value, the type will be inferred from this */
       default: ArgumentType;
+      /** A description for this option */
       description: string;
     } & (ArgumentType extends boolean
-      ? { parse?: never; argName?: never }
+      ? {
+          /** This is a boolean, you shouldn't provide a parse */
+          parse?: never;
+          argName?: never;
+        }
       : {
+          /** Parse the given string from the user to your data type */
           parse(val: string): ArgumentType;
+          /** A custom argument name */
           argName?: string;
         })
   ) {
@@ -95,6 +116,7 @@ export class ProgramBuilder<
     );
   }
 
+  /** Declare variadic parameters */
   variadic<Name extends string>(
     opts: If<{
       Cond: HasVariadic;
