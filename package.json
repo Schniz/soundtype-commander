@@ -14,7 +14,7 @@
     "prepublishOnly": "tsdx build && tsdx test"
   },
   "peerDependencies": {
-    "commander": "^2.20.0"
+    "commander": "^4.1.0"
   },
   "husky": {
     "hooks": {
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.16",
-    "commander": "^2.20.0",
+    "commander": "^4.1.0",
     "husky": "^3.0.2",
     "infer-types": "^0.0.1",
     "prettier": "^1.18.2",

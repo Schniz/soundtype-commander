@@ -2,6 +2,6 @@
 
 exports[`inference 1`] = `
 Object {
-  "result": "{ bool: boolean; } & { num: number; } & { positional: string[]; }",
+  "result": "{ bool: boolean; } & { num: number; } & { requiredNum: number; } & { positional: string[]; }",
 }
 `;
