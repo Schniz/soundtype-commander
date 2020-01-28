@@ -2,6 +2,12 @@ import { program } from '../src/index';
 import { getTypes } from 'infer-types';
 import * as path from 'path';
 
+function toInt(str: string): number {
+  const value = parseInt(str, 10);
+  if (Number.isNaN(value)) throw new Error('This is not an int');
+  return value;
+}
+
 test('works', () => {
   const myProgram = program('my-app', '1.0.0')
     .option({
@@ -13,11 +19,7 @@ test('works', () => {
       name: 'num',
       description: 'this is a number',
       default: undefined,
-      parse: str => {
-        const value = parseInt(str, 10);
-        if (Number.isNaN(value)) throw new Error('This is not an int');
-        return value;
-      },
+      parse: toInt,
     })
     .variadic({ name: 'positional', required: true })
     .build();
@@ -35,6 +37,32 @@ test('works', () => {
     bool: true,
     num: 10,
     positional: ['positional', 'argument'],
+  });
+});
+
+test(`ensures required isn't missing`, () => {
+  const myProgram = program('app', '1.0.0')
+    .option({
+      name: 'req',
+      description: 'a required field',
+      required: true,
+      parse: toInt,
+    })
+    .build();
+
+  const processExit = jest
+    .spyOn(process, 'exit')
+    .mockReturnValue(undefined as never);
+  const consoleError = jest.spyOn(console, 'error').mockReturnValue();
+
+  myProgram.parse(['node', 'myapp.js']);
+  expect(processExit).toHaveBeenCalledWith(1);
+  expect(consoleError).toHaveBeenCalledWith(
+    expect.stringMatching(`required option '--req <arg>'`)
+  );
+
+  expect(myProgram.parse(['node', 'myapp.js', '--req=10'])).toEqual({
+    req: 10,
   });
 });
 

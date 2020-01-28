@@ -64,14 +64,17 @@ export class ProgramBuilder<
    *
    * @param opts option definition
    */
-  option<ArgumentName extends string, ArgumentType>(
+  option<
+    ArgumentName extends string,
+    ArgumentType,
+    Required extends boolean | undefined
+  >(
     opts: {
       /** The name of the command (`--${name}`). Please only use camelCase! */
       name: ArgumentName;
       /** A shorthand form of the command */
       shorthand?: string;
-      /** A default value, the type will be inferred from this */
-      default: ArgumentType;
+      required?: Required;
       /** A description for this option */
       description: string;
     } & (ArgumentType extends boolean
@@ -85,7 +88,13 @@ export class ProgramBuilder<
           parse(val: string): ArgumentType;
           /** A custom argument name */
           argName?: string;
-        })
+        }) &
+      (Required extends true
+        ? { default?: undefined }
+        : {
+            /** The default value when the option is missing */
+            default: ArgumentType;
+          })
   ) {
     const optionArgument =
       typeof opts.default === 'boolean' ? '' : ` <${opts.argName || 'arg'}>`;
@@ -99,12 +108,14 @@ export class ProgramBuilder<
     >(
       [
         ...this.enhancers,
-        cmd =>
-          cmd.option(
+        cmd => {
+          const fn = opts.required ? 'requiredOption' : 'option';
+          return cmd[fn](
             `${shorthandDef}--${opts.name}${optionArgument}`,
             opts.description,
             opts.default
-          ),
+          );
+        },
       ],
       {
         ...this.options,
@@ -145,7 +156,8 @@ export class ProgramBuilder<
   }
 
   build(): Program<ArgumentTypes> {
-    return new Program(this.createCommand(), p => {
+    const command = this.createCommand();
+    return new Program(command, p => {
       const result: ArgumentTypes = {} as any;
 
       if (this.variadicOpts) {

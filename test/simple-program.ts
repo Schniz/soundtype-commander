@@ -16,6 +16,16 @@ const myProgram = program('my-app', '1.0.0')
       return value;
     },
   })
+  .option({
+    name: 'requiredNum',
+    description: 'this is a number',
+    required: true,
+    parse: str => {
+      const value = parseInt(str, 10);
+      if (Number.isNaN(value)) throw new Error('This is not an int');
+      return value;
+    },
+  })
   .variadic({ name: 'positional', required: true })
   .build();
 
